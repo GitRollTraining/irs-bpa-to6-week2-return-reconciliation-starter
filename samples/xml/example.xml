@@ -1,0 +1,1 @@
+<Return xmlns="urn:training:return:v2"><ReturnHeader><ReturnId>DEMO-101</ReturnId><TaxYear>2025</TaxYear><FilerName>Example A</FilerName></ReturnHeader><ReturnData><Form1040><Income><Label>Employment</Label><Amount>1200.50</Amount></Income></Form1040></ReturnData></Return>
