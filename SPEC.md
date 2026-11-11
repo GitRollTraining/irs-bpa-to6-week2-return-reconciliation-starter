@@ -114,3 +114,11 @@ ZIP package serve different purposes.
 Please keep the existing manual registration and original XML-reading functions usable. We must
 also be able to reopen and download our earlier inspection reports with their original contents.
 An upgrade must not require us to delete the work already stored on the desk.
+
+## What we leave to you
+
+We have said what the desk must do for our coordinator and what our files look like. We have not
+said how to build it, and we do not want to: how records are kept and compared, what happens when
+two things arrive at once, how the screens stay correct, how you know it works. Where one of those
+choices changes what our coordinator would see in a case we did not describe, tell us in your
+handover notes what you chose and why, so the next engineer does not have to guess.
