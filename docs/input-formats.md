@@ -2,7 +2,9 @@
 
 This is a fictional training format, not an IRS schema. These rules are supplied business policy,
 not a request for learners to invent tax knowledge or configurable schemas. Customer examples are
-inputs; learners must design their own complete test cases.
+inputs; learners must design their own complete test cases. This file fixes what goes in, what comes
+out and what the coordinator must see. It does not say how the desk stores, compares or computes
+anything: that is your design.
 
 ## 1. CSV work list
 
@@ -13,7 +15,8 @@ The pair is case-sensitive identity. Reject duplicate normalized pairs and ident
 record numbers (header is record 1; multiline quoted fields count as one CSV record). A parse failure
 may identify the parser's physical line and label it as such. Batch names are trimmed, nonempty,
 at most 100 Unicode code points; equal names may identify separate batches. A CSV is at most 256 KiB.
-Preview and confirm must validate the same content; failed validation persists no new batch.
+The batch that is created holds exactly the list the coordinator reviewed. A list that fails
+validation creates no batch.
 
 ## 2. ZIP delivery envelope
 
@@ -30,22 +33,28 @@ Names are unique, case-sensitive, flat ASCII names matching `[A-Za-z0-9][A-Za-z0
 The archive contains exactly those members plus the manifest, each once: no directories, absolute
 paths, parent traversal, backslashes, links, encryption, duplicate archive names or unlisted members.
 Only stored or deflated members are supported. Archive bytes are at most 8 MiB; manifest is at most
-64 KiB; each XML is at most 256 KiB; total expanded content is at most 8 MiB. Enforce expanded limits
-while reading, not merely from an untrusted header. File names are metadata, never filesystem paths.
+64 KiB; each XML is at most 256 KiB; total expanded content is at most 8 MiB. A package over any
+limit is refused, and no package, however it was built, may make the desk run out of memory or
+disk before it is refused. File names are metadata, never filesystem paths.
 
 Invalid envelopes are rejected without applying data. When the envelope can be inspected, process
 all its listed XML files and show all available results. Any invalid XML or identity outside the
 batch rejects the entire delivery: valid entries are displayed as not applied. Storage failure
-likewise applies none. Log a safe receipt/attempt identity and useful diagnostics without raw
-payload/contact disclosure. Rejected attempts are visible separately from accepted history; they
-reserve no delivery ID, so a repaired package may reuse it. No raw-content retention is required.
+likewise applies none. For every attempt, the coordinator and whoever reads the logs can tell which
+package it was and what each file needs. Filer names, contact values and file contents stand for
+personal data: they do not appear in logs or error text. A rejected attempt stays visible, separately
+from accepted history, after the page is reloaded; it reserves no delivery ID, so a repaired package
+may reuse it. No raw-content retention is required.
 
-Within a batch, an accepted delivery ID binds the supplier and the multiset of file names, revisions
-and normalized records. Repeating it with equivalent contents returns the same accepted receipt;
-ZIP member order, compression metadata and equivalent XML namespace prefixes do not change meaning.
-A changed name, revision, supplier or normalized value under that accepted ID is rejected. Delivery
-IDs are batch-scoped. Distinct accepted delivery IDs may repeat the same case revision; retain
-provenance without treating identical normalized records as a business conflict.
+Delivery IDs are batch-scoped. Sending an accepted delivery again under its ID changes nothing and
+returns the original receipt. It is the same delivery when it says the same things, however it was
+packed: the same package zipped again, with its members in another order, another compression or
+another namespace prefix, is a repeat. The same ID arriving with anything different in what it
+says (a file renamed, a revision changed, the other supplier, a business value changed) is refused
+with an explanation. Distinct accepted delivery IDs may repeat the same case revision; keep
+both as sources without treating identical records as a business conflict. One package may also
+carry the same case more than once, in different revisions or the same one; that is valid, and the
+rules of section 5 decide the result.
 
 ## 3. Supplier A (the existing V1 format)
 
@@ -80,7 +89,8 @@ Trim surrounding field text. FilerName is 1–120 code points and Label 1–80; 
 whitespace. Contact is absent => null; present => trimmed string of 0–120 code points, including
 empty string; no email-format validation. Amount accepts trimmed ASCII text matching `[0-9]+(\.[0-9]{1,2})?`,
 max 999999999.99; `12` and `12.0` are valid, `12.` is invalid; reject exponent notation, signs, commas, NaN and
-infinity. Normalize to an exact two-place decimal string. No totals or tax calculations are required.
+infinity. Wherever the desk shows or hands over an amount, it is written with exactly two decimal
+places (`12` is shown as `12.00`). No totals or tax calculations are required.
 Duplicate income labels are allowed; preserve every entry and its order.
 
 The original XML example in samples/xml/ illustrates this format. The rules
@@ -120,31 +130,37 @@ length and error-location rules. Map `id/year` to return_id/year, Name to filer_
 contact, and ordered Description/Cents pairs to income.label/amount. Missing Email is null;
 present empty Email is an empty string. Cents is trimmed ASCII digits only, in 0–99999999999,
 representing an exact monetary amount with two decimal places (120050 → `1200.50`, 2 → `0.02`).
-Leading zeroes are allowed. Do not use a floating-point value to determine monetary equivalence.
-Equivalent A/B records have identical normalized values; all income entries/order are retained.
+Leading zeroes are allowed. Amounts are exact money: A's `7.1` and B's Cents `710` are the same
+amount, and two amounts one cent apart are different amounts at every size up to the maximum.
+The same case sent by A and by B with the same values is the same record; all income entries and
+their order are retained.
 
 ## 5. Current case, conflicts and history
 
-A valid delivery creates immutable receipt and occurrence identities. Two different cases are
-independent. For each expected identity, collect only occurrences from accepted deliveries.
-With none, its status is missing. Otherwise consider the highest revision number only:
+An accepted delivery keeps its receipt, and every case file it carried stays in that case's
+history; neither is changed or removed later. Two different cases are independent. Only accepted
+deliveries count toward a case. A case nothing accepted has reached is missing. Otherwise only
+its highest revision number decides:
 
 - All normalized records at that revision identical: current, with that value and all its sources.
 - Two or more differing normalized records at that revision: conflict, with all variants/sources.
 
 Lower revisions stay in history and cannot change the current result. A higher unambiguous revision
 resolves a lower conflict. Repeated identical entries are not conflicts; they are distinct sources.
-Record equivalence compares every normalized business field, including missing versus empty contact,
-ordered income entries and exact normalized amounts. Supplier and file name do not change business
-record equivalence. Show current revision, status and sources; show field differences against the
-highest lower accepted revision for a correction (revision numbers may skip). If that lower
-revision has conflicting variants, compare against each distinct variant and label the baseline;
-show differences between variants for a current conflict. Missing cases need no
+Two records are identical when every business value agrees. A record with no contact and a record
+with an empty contact are different; so are two records whose income entries are the same but in
+another order. Which supplier sent a record, and under which file name, makes no difference to
+whether two records are identical. Show current revision, status and sources. For a correction,
+show which business values it changed, so that the coordinator can tell what each difference is
+measured against. Revision numbers may skip, and the work a correction replaces may itself have
+been in conflict: revision 1 may have arrived as two differing variants before revision 4 settles
+the case. Show the differences between variants for a current conflict. Missing cases need no
 fabricated history. Failed attempts never create accepted sources or invalidate already-current data.
 
 The batch is ready exactly when all expected cases are current (none missing or conflicting).
-Do not use arrival order or file name to pick a winner. Acceptance, retry binding and current-state
-changes must be all-or-none under repeated/concurrent requests and persistence errors. A single
+Do not use arrival order or file name to pick a winner. Accepting a delivery, recognising a repeat
+and the change they make to current cases happen completely or not at all, also when the same
+request arrives twice, when two requests arrive together and when storage fails part-way. A single
 local coordinator does not justify corrupting state when a browser repeats a request.
 
 ## 6. Consumer handoff ZIP
@@ -166,11 +182,11 @@ are the unique supporting receipt IDs in that same order. Fields have the meanin
 no raw XML, other cases or local paths. Counts, identities/revisions and source lists must agree
 between manifest, case records and the handoff shown in the UI.
 
-Create an immutable handoff identity and snapshot as one complete unit. Subsequent downloads of
-that identity must return the same ZIP bytes, including after restart and later corrections.
+A handoff, once created, never changes. Every later download of it returns the same ZIP bytes,
+including after the desk restarts and after later corrections.
 A new explicit handoff creation may create a new identity even when data is unchanged; handoff
-creation idempotency is optional, not a hidden requirement. Rejected/failed creation publishes no
-partial handoff. An unknown final outcome after a lost response must be described honestly; show
+creation idempotency is optional, not a hidden requirement. A creation that is refused, fails or
+is interrupted leaves nothing that looks like a finished handoff. An unknown final outcome after a lost response must be described honestly; show
 existing handoffs so the coordinator can recover. Current data/history remain distinct from frozen
 handoffs. Do not mutate old V1 inspection exports to pretend they were V2 handoffs.
 
@@ -192,9 +208,8 @@ sum to expected count. Ready means all expected cases are current. Has-handoff m
 frozen handoff exists; it does not imply the batch is currently ready. The attention filter means
 not ready, or updated since its latest handoff. The ready and has-handoff filters are independent.
 
-Before any handoff, use not-yet-handed-over rather than an updated flag. Otherwise compare the
-current batch cases with the latest handoff's frozen cases, including revisions, normalized values
-and supporting sources. Any difference, including a current conflict, means updated. An additional
-accepted source for the current value/revision changes provenance. Rejected attempts, equivalent
-retries and lower-revision receipts that leave the current cases unchanged do not. A new handoff
-matching current cases clears the flag. These are business states, not a required storage design.
+Before any handoff, use not-yet-handed-over rather than an updated flag. After one, a batch is
+updated since handoff when a handoff created now would not say what the latest one said about its
+cases: a different revision, different values, different supporting sources, or a case now in
+conflict. Activity that would leave all of that as it was does not make the batch updated. A new
+handoff clears the flag. These are business states, not a required storage design.

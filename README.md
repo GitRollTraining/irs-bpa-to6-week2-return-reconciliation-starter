@@ -3,9 +3,9 @@
 Start with the [client request](SPEC.md). This application currently lets a coordinator register
 expected cases manually, inspect XML files and download an inspection report. The six requested
 capabilities are for you to build. Existing application code earns no new implementation credit.
-Work one capability at a time: decide how a part should work and say so before you ask your coding
-agent to build it, and ask it to stop when that part is done. An agent asked for everything at once
-makes every design decision for you.
+The client says what the desk must do, not how. Decide how a part should work, and say so to your
+coding agent, before you ask for it; an agent asked for everything at once makes every design
+decision for you, and you then have to find those decisions in what it built and judge each one.
 
 ## Run locally
 
@@ -44,4 +44,5 @@ Keep any data you need before resetting a disposable local database.
 Read [customer formats](docs/input-formats.md), [assignment requirements](docs/submission.md)
 and the separate [Quiz](docs/quiz.md). The existing application does not yet accept CSV or ZIP.
 The format examples are not test cases with prepared expected results. Design and implement your
-own tests, test data, quality checks and CI. No completed testing or CI setup is included.
+own tests, test data and quality checks. No completed testing setup is included, and no CI
+workflow is asked for.
