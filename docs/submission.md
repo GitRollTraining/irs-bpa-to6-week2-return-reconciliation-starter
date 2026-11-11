@@ -18,6 +18,36 @@ can be made wrongly in a way the examples will not show. Do not rewrite solely f
 An upgrade must retain readable existing V1 inspections and their JSON content, as well as original
 XML/manual-entry behavior. New batches may use a new model; no legacy migration framework is mandated.
 
+## What counts as a decision of yours
+
+The client request and the customer formats say what the desk must do. How it does it is yours to
+decide, in every capability, in the stored data and its upgrade, in the tests and in the security
+checks. These documents do not list the decisions. A decision is counted when a message of yours
+in the coding-agent session says, in your own words, what you chose, what you turned down, and a
+concrete case that decides between them.
+
+1. A decision says how, not that. The client has already said what must happen; asking for that
+   behaviour, or for a test of it, repeats the client. An example from another system: "Two clerks
+   must never lose each other's edit; add a test for it" is a requirement. "Each save carries the
+   version it read and is refused when the stored version is newer. I am turning down
+   last-write-wins: two clerks saving the same order one after the other would lose the first edit
+   without a message" is a decision.
+2. The case is one you made up, or one from these documents that you run through both options and
+   say where they differ. Naming a document's example, or adding one more example of a rule the
+   documents state, is repetition.
+3. You can decide before the agent designs a part, or after it has built or recommended something.
+   Afterwards, "agreed" and "go ahead" are not counted. Ask how the part handles a case you name,
+   then keep or change it and say what the other option would have done in that case. Asking the
+   agent what the options are and what each does in your case leaves the decision with you; asking
+   it which one to pick gives the decision away.
+4. The deciding words are yours. Asking the agent to name the reason, the risk or the limit, or to
+   write the decision into a file, hands it the decision. A decision that appears only in
+   docs/decisions.md is not counted.
+5. Give each decision its own case. Several decisions in one message are read, but one case cannot
+   carry two decisions.
+
+A decision that reaches the wrong conclusion for this desk is not counted.
+
 ## Verification of the changed application
 
 Create your own cases with expected results you worked out from the rules, and meaningful new
@@ -59,22 +89,17 @@ document that customer formats section 3 asks for (docs/xml-mapping.md), and REA
 start/check/build/reset and upgrade instructions. Quiz answers go in answers.md at the repository root. Document configuration names/defaults actually used;
 provide placeholder-only environment examples only where needed. Never include keys, personal data,
 local databases or machine-specific paths in the submission. Do not create unnecessary config files
-for credit. Build ZIP test deliveries inside your tests rather than committing many archive files: a
-repository holding more than 8 archive files cannot be read by the grader. Explain material changes and how you protected the original user workflows. Keep a
+for credit. A repository holding more than 8 archive files cannot be read by the grader. Where
+your test deliveries come from, and how a reader checks one against its expected result, is for you
+to decide within that limit. Explain material changes and how you protected the original user workflows. Keep a
 decision record, docs/decisions.md, for the engineer who takes this over: each design decision you
 made where these documents left the choice to you, what you chose, what you turned down, and the
 case that decided it. It is part of the handover, and writing it is how you find the decisions.
 
 Three kinds of evidence are read. Artifact checks inspect connected implementation and authored
-tests/configuration, with supplied-work boundaries. Ownership reads the engineering decisions you make
-and state yourself in your coding-agent session. A decision counts when you say, in your own words,
-what you chose, what you turned down and a concrete case of your own that decides between them. You
-can make it before the agent designs a part, or afterwards: ask how the part it built handles a case
-you name, then keep or change what it did for a reason you give. Every capability, the stored data
-and its upgrade, the tests and the security checks hold such decisions; these documents
-do not list them. Accepting the agent's proposal, repeating a rule or an example these documents
-state, or a decision that appears only in docs/decisions.md and not in your session, is not counted.
-A decision that reaches the wrong conclusion for this desk is not counted either. Trait reads how you work with the agent:
+tests/configuration, with supplied-work boundaries. Ownership reads the engineering
+decisions you make and state yourself in your coding-agent session; the section What counts as a
+decision of yours says what is read. Trait reads how you work with the agent:
 saying what done means before asking for work, choosing specific results to check and checking them
 yourself, and questioning a claim before relying on it. Code or a retrospective essay cannot
 substitute for either. Your coding-agent session is the record: use the recorder your facilitator
