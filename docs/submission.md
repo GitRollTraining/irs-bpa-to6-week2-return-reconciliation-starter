@@ -59,7 +59,8 @@ document that customer formats section 3 asks for (docs/xml-mapping.md), and REA
 start/check/build/reset and upgrade instructions. Quiz answers go in answers.md at the repository root. Document configuration names/defaults actually used;
 provide placeholder-only environment examples only where needed. Never include keys, personal data,
 local databases or machine-specific paths in the submission. Do not create unnecessary config files
-for credit. Explain material changes and how you protected the original user workflows. Keep a
+for credit. Build ZIP test deliveries inside your tests rather than committing many archive files: a
+repository holding more than 8 archive files cannot be read by the grader. Explain material changes and how you protected the original user workflows. Keep a
 decision record, docs/decisions.md, for the engineer who takes this over: each design decision you
 made where these documents left the choice to you, what you chose, what you turned down, and the
 case that decided it. It is part of the handover, and writing it is how you find the decisions.
