@@ -3,6 +3,9 @@
 Start with the [client request](SPEC.md). This application currently lets a coordinator register
 expected cases manually, inspect XML files and download an inspection report. The six requested
 capabilities are for you to build. Existing application code earns no new implementation credit.
+Work one capability at a time: decide how a part should work and say so before you ask your coding
+agent to build it, and ask it to stop when that part is done. An agent asked for everything at once
+makes every design decision for you.
 
 ## Run locally
 

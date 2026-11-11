@@ -54,16 +54,16 @@ document that customer formats section 3 asks for (docs/xml-mapping.md), and REA
 start/check/build/reset and upgrade instructions. Quiz answers go in answers.md at the repository root. Document configuration names/defaults actually used;
 provide placeholder-only environment examples only where needed. Never include keys, personal data,
 local databases or machine-specific paths in the submission. Do not create unnecessary config files
-for credit. Explain material changes and how you protected the original user workflows.
+for credit. Build ZIP test deliveries inside your tests rather than committing many archive files: a
+repository holding more than 8 archive files cannot be read by the grader. Explain material changes and how you protected the original user workflows.
 
 Three kinds of evidence are read. Artifact checks inspect connected implementation and authored
 tests/configuration, with supplied-work boundaries. Ownership reads the engineering decisions you make
 and state yourself in your coding-agent session: before the agent designs a part, say what you decided
-and why, in your own words, with a concrete case, for the judgments this work needs (for example what
-identifies a case or a delivery, where validation ends and accepted writes begin, what happens under
-repeated or simultaneous acceptance, how current state and the frozen handoff are derived, which test
-could actually detect a broken rule, what CI must block). Accepting the agent's proposal, or repeating
-a rule these documents already state, is not your decision. Trait reads how you work with the agent:
+and why, in your own words, with a concrete case. Every feature, its storage, its tests and the CI
+gate hold judgments these documents leave open: how a stated outcome is achieved, what can go wrong,
+and what evidence would show it. Find them and make them yourself. Accepting the agent's proposal, or
+repeating a rule these documents already state, is not your decision. Trait reads how you work with the agent:
 saying what done means before asking for work, choosing specific results to check and checking them
 yourself, and questioning a claim before relying on it. Code or a retrospective essay cannot
 substitute for either. Your coding-agent session is the record: use the recorder your facilitator
