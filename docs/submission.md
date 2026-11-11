@@ -5,7 +5,7 @@
 Clone the published Return Batch Reconciliation Desk starter. It is a working V1 project with
 frontend/ and backend/, a few customer format examples and locked runtime/build dependencies.
 Follow its README to start both services and create a V1 batch/inspection before changing code.
-Record the starting commit. Existing application code is supplied capability: its unchanged presence earns no new
+Record the starting commit in your README. Existing application code is supplied capability: its unchanged presence earns no new
 implementation credit. Tests, fixtures with expected outcomes, lint/security checks and CI are
 your work; none is supplied. Preserve the existing application behavior and safety controls.
 
@@ -29,33 +29,44 @@ inputs, not a complete test oracle. At minimum verify:
 - A persistence failure leaves accepted state intact; restart-equivalent instances recover history
   and handoffs. Test concurrent/repeated acceptance at the backend boundary without requiring an MQ.
 - Upgrading a genuine V1-created database preserves historical inspection contents; do not generate
-  the expected historical record by calling the upgraded implementation.
+  the expected historical record by calling the upgraded implementation. Create that database from
+  the starting commit, or commit a small synthetic one as a test fixture with a note on how it was
+  made; such a fixture is test data, not one of the local databases excluded below.
 - Cross-batch overview counts and filters, independent readiness/handoff state, update flags
   relative to the latest handoff, and isolation when another batch changes.
 - Handoff refusal with missing/conflicting cases, exact consumer JSON/ZIP contents, immutable H1
   after further corrections, and failure while creating a handoff leaving no published partial output.
 
 Use real React and FastAPI in headless Playwright for CSV creation, package acceptance, a correction,
-a conflict and resolution, investigation, cross-batch overview and downloaded handoff contents. Write a regression journey for the original XML/manual-entry workflow. Additional focused tests may isolate parsers/reconciliation/storage, but end-to-end
+a conflict and resolution, investigation, cross-batch overview and downloaded handoff contents. Also write a Playwright regression journey for the original XML/manual-entry workflow. Additional focused tests may isolate parsers/reconciliation/storage, but end-to-end
 subject APIs must not be replaced with mocks. Avoid repeating the production algorithm in the oracle.
 
 Build a CI workflow that checks startup, code quality, security, tests and build before
-delivering a verified build artifact. Its commands must invoke your actual checks and propagate
+delivering a verified build artifact (a workflow artifact uploaded only from the checked revision). Its commands must invoke your actual checks and propagate
 failures; a workflow file or unconditional artifact upload is insufficient. Verify new dependency/application risks and untrusted XML/ZIP/UI boundaries;
-record what checks do not establish. Keep synthetic test data separate from coordinator data. No
+record what checks do not establish. Keep synthetic test data separate from any real data. No
 remote deployment is required. Source inspection does not certify an actual Actions execution.
 
 ## Deliverables and evidence
 
-Submit the repository URL and immutable commit, learner-authored tests, effective CI, and README setup,
-start/check/build/reset and upgrade instructions. Document configuration names/defaults actually used;
+Submit the repository URL and immutable commit, learner-authored tests, effective CI, the XML mapping
+document that customer formats section 3 asks for (docs/xml-mapping.md), and README setup,
+start/check/build/reset and upgrade instructions. Quiz answers go in answers.md at the repository root. Document configuration names/defaults actually used;
 provide placeholder-only environment examples only where needed. Never include keys, personal data,
 local databases or machine-specific paths in the submission. Do not create unnecessary config files
 for credit. Explain material changes and how you protected the original user workflows.
 
-Artifact checks inspect connected implementation and authored tests/configuration, with supplied-work
-boundaries. Ownership and Trait read attributable learner Session evidence for different predicates;
-code or a retrospective essay cannot substitute. Use the facilitator-approved recorder and confirm
-capture before substantive work. Missing recorder/platform setup belongs to the facilitator, not the
-learner. Do not fabricate Session turns. The existing nine supplied-case Quiz questions remain a
+Three kinds of evidence are read. Artifact checks inspect connected implementation and authored
+tests/configuration, with supplied-work boundaries. Ownership reads the engineering decisions you make
+and state yourself in your coding-agent session: before the agent designs a part, say what you decided
+and why, in your own words, with a concrete case, for the judgments this work needs (for example what
+identifies a case or a delivery, where validation ends and accepted writes begin, what happens under
+repeated or simultaneous acceptance, how current state and the frozen handoff are derived, which test
+could actually detect a broken rule, what CI must block). Accepting the agent's proposal, or repeating
+a rule these documents already state, is not your decision. Trait reads how you work with the agent:
+saying what done means before asking for work, choosing specific results to check and checking them
+yourself, and questioning a claim before relying on it. Code or a retrospective essay cannot
+substitute for either. Your coding-agent session is the record: use the recorder your facilitator
+names at kickoff and confirm it is capturing before substantive work; if none was named, ask the
+facilitator. Missing recorder/platform setup belongs to the facilitator, not the learner. Do not fabricate Session turns. The existing nine supplied-case Quiz questions remain a
 separate lane; answers do not earn Session credit or fill the practical time budget.
